@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSV Reader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    input[type="file"] {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <input type="file" id="csvInput" accept=".csv" onchange="handleFile()">
+  
+  <h2>Data Table</h2>
+  <table id="dataTable"></table>
+
+  <h2>Table 2</h2>
+  <table id="table2"></table>
+
+  <script>
+    function handleFile() {
+      const fileInput = document.getElementById('csvInput');
+      const file = fileInput.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const data = e.target.result;
+          displayDataTable(data);
+          displayTable2();
+        };
+
+        reader.readAsText(file);
+      }
+    }
+
+    function displayDataTable(csvData) {
+      const dataArray = csvData.split('\n').map(row => row.split(','));
+      const dataTable = document.getElementById('dataTable');
+
+      // Clear previous data
+      dataTable.innerHTML = '';
+
+      // Create table headers
+      const headerRow = document.createElement('tr');
+      dataArray[0].forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+      dataTable.appendChild(headerRow);
+
+      // Create table rows
+      for (let i = 1; i < dataArray.length; i++) {
+        const row = document.createElement('tr');
+        dataArray[i].forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          row.appendChild(td);
+        });
+        dataTable.appendChild(row);
+      }
+    }
+
+    function displayTable2() {
+      const table2 = document.getElementById('table2');
+
+      // Clear previous data
+      table2.innerHTML = '';
+
+      // Create table headers for Table 2
+      const headerRow = document.createElement('tr');
+      headerRow.innerHTML = '<th>Category</th><th>Value</th>';
+      table2.appendChild(headerRow);
+
+      // Specify constant values for Table 2
+      const constants = [
+        { category: 'Alpha', value: 30 },
+        { category: 'Beta', value: 16 },
+        { category: 'Charlie', value: 270 }
+      ];
+
+      // Display constant values in Table 2
+      constants.forEach(entry => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${entry.category}</td><td>${entry.value}</td>`;
+        table2.appendChild(row);
+      });
+    }
+  </script>
+</body>
+</html>
